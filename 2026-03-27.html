@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>日报 03.27</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;background:#000;color:#e5e5e5;-webkit-font-smoothing:antialiased}
+.w{max-width:700px;margin:0 auto;padding:16px 14px}
+.hdr{text-align:center;padding:28px 0 18px;border-bottom:1px solid #151515;margin-bottom:18px}
+.hdr h1{font-size:20px;font-weight:700;color:#fff}
+.hdr p{color:#777;font-size:12px;margin-top:5px}
+.hdr .m{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.hdr .m span{font-size:11px;color:#555;background:#0a0a0a;padding:3px 10px;border-radius:14px;border:1px solid #181818}
+.toc{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:22px}
+.ti{font-size:11px;color:#777;text-decoration:none;padding:3px 9px;border-radius:12px;background:#080808;border:1px solid #151515;white-space:nowrap}
+.ti:hover{border-color:var(--c);color:#bbb}
+.ti .n{color:#333;margin-left:3px}
+section{margin-bottom:24px}
+h2{font-size:15px;font-weight:600;color:#999;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+h2 i{width:5px;height:5px;border-radius:50%;background:var(--c)}
+.card{background:#060606;border:1px solid #131313;border-radius:10px;margin-bottom:10px;overflow:hidden}
+.card:hover{border-color:#222}
+.card.hot{border-left:2px solid #dc2626}
+.card.warm{border-left:2px solid #d97706}
+.row{display:flex;gap:12px;padding:12px 14px}
+.img{width:96px;height:54px;min-width:96px;border-radius:6px;background-size:cover;background-position:center;background-color:#111}
+.imgf{display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--c) 20%, #000)}
+.imgf span{font-size:24px}
+.cnt{flex:1;min-width:0}
+.tags{display:flex;gap:4px;margin-bottom:4px;flex-wrap:wrap}
+.tag{font-size:10px;padding:2px 8px;border-radius:4px;color:#fff;background:var(--c);font-weight:600;white-space:nowrap;text-align:center;min-width:40px;display:inline-flex;align-items:center;justify-content:center}
+.tm{font-size:9px;color:#555;margin-left:auto;font-weight:300}
+.tt{font-size:14px;font-weight:600;color:#eee;line-height:1.4}
+.sm{font-size:12px;color:#999;margin-top:2px;line-height:1.5}
+.ins{font-size:14px;color:#c4956a;margin:0 14px;padding:8px 12px;background:#1a1206;border-radius:6px;border-left:2px solid #c4956a;line-height:1.6;font-weight:500}
+.sl{padding:6px 14px 10px;display:flex;flex-direction:column;gap:2px}
+.si{display:flex;align-items:center;gap:4px;text-decoration:none;color:#999;font-size:11px;padding:3px 4px;border-radius:4px}
+.si:hover{background:#111;color:#999}
+.bg{font-size:9px;padding:1px 5px;border-radius:3px;color:#fff;background:var(--c);font-weight:600;flex-shrink:0}
+.sn{font-size:10px;color:#888;flex-shrink:0;min-width:50px}
+.st{color:#555;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.si:hover .st{color:#aaa}
+.ft{text-align:center;padding:20px 0;margin-top:10px;border-top:1px solid #0f0f0f;font-size:10px;color:#555}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.filter-group{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.filter-label{font-size:10px;color:#555;margin-right:2px}
+.filter-btn{font-size:10px;color:#666;background:#080808;border:1px solid #181818;padding:3px 8px;border-radius:10px;cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:#333;color:#aaa}
+.filter-btn.active{border-color:#555;color:#eee;background:#151515}
+.sort-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.sort-label{font-size:11px;color:#777}
+.sort-btn{font-size:11px;color:#666;background:#080808;border:1px solid #181818;padding:4px 10px;border-radius:12px;cursor:pointer;transition:all .15s}
+.sort-btn:hover{border-color:#333;color:#aaa}
+.sort-btn.active{border-color:#555;color:#eee;background:#151515}
+.badge{cursor:pointer;transition:all .15s}
+.badge:hover{border-color:#444;color:#ccc}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:100;justify-content:center;align-items:center}
+.overlay.show{display:flex}
+.panel{background:#111;border:1px solid #222;border-radius:14px;padding:16px 20px;max-height:70vh;max-width:500px;width:90%;overflow-y:auto}
+.panel-head{font-size:13px;color:#ccc;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.panel-close{cursor:pointer;font-size:20px;color:#666;padding:0 4px}
+.panel-close:hover{color:#fff}
+.pl-item{font-size:11px;color:#aaa;padding:3px 0;display:flex;align-items:center;gap:6px}
+.pl-count{font-size:10px;color:#555;min-width:20px;text-align:right}
+@media(max-width:640px){.w{padding:10px 8px}.img{width:72px;height:40px;min-width:72px}.tt{font-size:13px}.tag{font-size:9px;min-width:36px}}
+</style></head><body>
+<div class="w">
+<div class="hdr"><h1>AI Daily</h1>
+<p>2026年03月27日 · 48h 动态</p>
+<div class="m">
+<span class="badge" onclick="togglePanel('topic')">🔥 0 主题</span>
+<span class="badge" onclick="togglePanel('source')">📊 0 信源</span>
+<span class="badge" onclick="togglePanel('channel')">📡 0 渠道</span>
+</div></div>
+
+<div id="topic-overlay" class="overlay" onclick="if(event.target===this)this.classList.remove('show')"><div id="topic-list" class="panel">
+<div class="panel-head">🔥 主题列表 <span class="panel-close" onclick="closePanel(this)">&times;</span></div>
+
+</div>
+
+</div><div id="source-overlay" class="overlay" onclick="if(event.target===this)this.classList.remove('show')"><div id="source-list" class="panel">
+<div class="panel-head">📊 信源列表 <span class="panel-close" onclick="closePanel(this)">&times;</span></div>
+
+</div>
+
+</div><div id="channel-overlay" class="overlay" onclick="if(event.target===this)this.classList.remove('show')"><div id="channel-list" class="panel">
+<div class="panel-head">📡 渠道列表 <span class="panel-close" onclick="closePanel(this)">&times;</span></div>
+
+</div></div>
+
+<div class="filter-bar">
+<div class="filter-group"><span class="filter-label">分类</span><button class="filter-btn active" data-fk="topic" data-fv="all">全部</button></div>
+</div>
+<div class="filter-bar">
+<div class="filter-group"><span class="filter-label">类型</span><button class="filter-btn active" data-fk="type" data-fv="all">全部</button></div>
+</div>
+<div class="filter-bar">
+<div class="filter-group"><span class="filter-label">时间</span><button class="filter-btn active" data-fk="time" data-fv="all">今天 03/27</button><a class="filter-btn" href="2026-03-26.html">昨天 03/26</a><a class="filter-btn" href="2026-03-25.html">前天 03/25</a></div>
+</div>
+<div class="sort-bar">
+<span class="sort-label">排序</span>
+<button class="sort-btn" data-mode="category">📂 分类</button>
+<button class="sort-btn active" data-mode="time">🕐 时间</button>
+<button class="sort-btn" data-mode="score">🔥 重要度</button>
+</div>
+<div class="cards"></div>
+<div class="ft">ai-news-monitor · 00:11</div>
+</div><script>
+function togglePanel(id){document.querySelectorAll('.overlay').forEach(function(o){if(o.id===id+'-overlay'){o.classList.toggle('show')}else{o.classList.remove('show')}})}
+function closePanel(el){el.closest('.overlay').classList.remove('show')}
+
+document.addEventListener('DOMContentLoaded',function(){
+  // Sort buttons
+  document.querySelectorAll('.sort-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var mode=this.dataset.mode;
+      document.querySelectorAll('.sort-btn').forEach(function(b){b.classList.remove('active')});
+      this.classList.add('active');
+      var container=document.querySelector('.cards');
+      var cards=Array.from(container.querySelectorAll('.card'));
+      if(mode==='time'){cards.sort(function(a,b){return(b.dataset.time||'').localeCompare(a.dataset.time||'')})}
+      else if(mode==='score'){cards.sort(function(a,b){return(parseInt(b.dataset.score)||0)-(parseInt(a.dataset.score)||0)})}
+      else if(mode==='category'){cards.sort(function(a,b){var order={'AI':'01','SaaS':'02','DevTools':'03','Infra':'04','SEO':'05','电商':'06'};var ta=a.querySelector('.tag')?a.querySelector('.tag').textContent:'';var tb=b.querySelector('.tag')?b.querySelector('.tag').textContent:'';var oa=order[ta]||'99'+ta;var ob=order[tb]||'99'+tb;if(oa!==ob)return oa.localeCompare(ob);return(b.dataset.time||'').localeCompare(a.dataset.time||'')})}
+      cards.forEach(function(c){container.appendChild(c)});
+    });
+  });
+
+  // Filter buttons - use event delegation on each filter-group
+  document.querySelectorAll('.filter-group').forEach(function(group){
+    group.addEventListener('click',function(e){
+      var btn=e.target.closest('.filter-btn');
+      if(!btn||!btn.dataset.fk)return;
+      group.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
+      btn.classList.add('active');
+      doFilter();
+    });
+  });
+});
+
+function doFilter(){
+  var filters={};
+  document.querySelectorAll('.filter-group').forEach(function(g){
+    var active=g.querySelector('.filter-btn.active');
+    if(active&&active.dataset.fk){filters[active.dataset.fk]=active.dataset.fv}
+  });
+  var tv=filters['topic']||'all';
+  var yv=filters['type']||'all';
+  document.querySelectorAll('.card').forEach(function(c){
+    var show=true;
+    if(tv!=='all'&&c.dataset.topic!==tv)show=false;
+    if(yv!=='all'&&c.dataset.type!==yv)show=false;
+    c.style.display=show?'':'none';
+  });
+}
+</script></body></html>
