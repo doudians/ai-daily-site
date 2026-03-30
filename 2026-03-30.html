@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>日报 03.30</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;background:#000;color:#e5e5e5;-webkit-font-smoothing:antialiased}
+.w{max-width:700px;margin:0 auto;padding:16px 14px}
+.hdr{text-align:center;padding:28px 0 18px;border-bottom:1px solid #151515;margin-bottom:18px}
+.hdr h1{font-size:20px;font-weight:700;color:#fff}
+.hdr p{color:#777;font-size:12px;margin-top:5px}
+.hdr .m{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.hdr .m span{font-size:11px;color:#555;background:#0a0a0a;padding:3px 10px;border-radius:14px;border:1px solid #181818}
+.toc{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:22px}
+.ti{font-size:11px;color:#777;text-decoration:none;padding:3px 9px;border-radius:12px;background:#080808;border:1px solid #151515;white-space:nowrap}
+.ti:hover{border-color:var(--c);color:#bbb}
+.ti .n{color:#333;margin-left:3px}
+section{margin-bottom:24px}
+h2{font-size:15px;font-weight:600;color:#999;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+h2 i{width:5px;height:5px;border-radius:50%;background:var(--c)}
+.card{background:#060606;border:1px solid #131313;border-radius:10px;margin-bottom:10px;overflow:hidden}
+.card:hover{border-color:#222}
+.card.hot{border-left:2px solid #dc2626}
+.card.warm{border-left:2px solid #d97706}
+.row{display:flex;gap:12px;padding:12px 14px}
+.img{width:96px;height:54px;min-width:96px;border-radius:6px;background-size:cover;background-position:center;background-color:#111}
+.imgf{display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--c) 20%, #000)}
+.imgf span{font-size:24px}
+.cnt{flex:1;min-width:0}
+.tags{display:flex;gap:4px;margin-bottom:4px;flex-wrap:wrap}
+.tag{font-size:10px;padding:2px 8px;border-radius:4px;color:#fff;background:var(--c);font-weight:600;white-space:nowrap;text-align:center;min-width:40px;display:inline-flex;align-items:center;justify-content:center}
+.tm{font-size:9px;color:#555;margin-left:auto;font-weight:300}
+.tt{font-size:14px;font-weight:600;color:#eee;line-height:1.4}
+.sm{font-size:12px;color:#999;margin-top:2px;line-height:1.5}
+.ins{font-size:14px;color:#c4956a;margin:0 14px;padding:8px 12px;background:#1a1206;border-radius:6px;border-left:2px solid #c4956a;line-height:1.6;font-weight:500}
+.sl{padding:6px 14px 10px;display:flex;flex-direction:column;gap:2px}
+.si{display:flex;align-items:center;gap:4px;text-decoration:none;color:#999;font-size:11px;padding:3px 4px;border-radius:4px}
+.si:hover{background:#111;color:#999}
+.bg{font-size:9px;padding:1px 5px;border-radius:3px;color:#fff;background:var(--c);font-weight:600;flex-shrink:0}
+.sn{font-size:10px;color:#888;flex-shrink:0;min-width:50px}
+.st{color:#555;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.si:hover .st{color:#aaa}
+.ft{text-align:center;padding:20px 0;margin-top:10px;border-top:1px solid #0f0f0f;font-size:10px;color:#555}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.filter-group{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.filter-label{font-size:10px;color:#555;margin-right:2px}
+.filter-btn{font-size:10px;color:#666;background:#080808;border:1px solid #181818;padding:3px 8px;border-radius:10px;cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:#333;color:#aaa}
+.filter-btn.active{border-color:#555;color:#eee;background:#151515}
+.sort-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.sort-label{font-size:11px;color:#777}
+.sort-btn{font-size:11px;color:#666;background:#080808;border:1px solid #181818;padding:4px 10px;border-radius:12px;cursor:pointer;transition:all .15s}
+.sort-btn:hover{border-color:#333;color:#aaa}
+.sort-btn.active{border-color:#555;color:#eee;background:#151515}
+.badge{cursor:pointer;transition:all .15s}
+.badge:hover{border-color:#444;color:#ccc}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:100;justify-content:center;align-items:center}
+.overlay.show{display:flex}
+.panel{background:#111;border:1px solid #222;border-radius:14px;padding:16px 20px;max-height:70vh;max-width:500px;width:90%;overflow-y:auto}
+.panel-head{font-size:13px;color:#ccc;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.panel-close{cursor:pointer;font-size:20px;color:#666;padding:0 4px}
+.panel-close:hover{color:#fff}
+.pl-item{font-size:11px;color:#aaa;padding:3px 0;display:flex;align-items:center;gap:6px}
+.pl-count{font-size:10px;color:#555;min-width:20px;text-align:right}
+@media(max-width:640px){.w{padding:10px 8px}.img{width:72px;height:40px;min-width:72px}.tt{font-size:13px}.tag{font-size:9px;min-width:36px}}
+</style></head><body>
+<div class="w">
+<div class="hdr"><h1>AI Daily</h1>
+<p>2026年03月30日 · 48h 动态</p>
+<div class="m">
+<span class="badge" onclick="togglePanel('topic')">🔥 33 主题</span>
+<span class="badge" onclick="togglePanel('source')">📊 74 信源</span>
+<span class="badge" onclick="togglePanel('channel')">📡 16 渠道</span>
+</div></div>
+
+<div id="topic-overlay" class="overlay" onclick="if(event.target===this)this.classList.remove('show')"><div id="topic-list" class="panel">
+<div class="panel-head">🔥 主题列表 <span class="panel-close" onclick="closePanel(this)">&times;</span></div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> AI 面部识别导致无辜女性被错误逮捕</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> PyNear: 比 Faiss 更快的精确和近似 KNN 库</div>
+<div class="pl-item"><span class="tag" style="--c:#2563eb">开发工具</span> Claude Code 生态工具链全面爆发</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Bluesky 推出 AI 应用 Attie 构建自定义 Feed</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> 人类+AI 协作攻克 Knuth 「Claude Cycles」数学问题</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Google 发布 Gemini 3.1 Flash Live 最拟人 AI 语音模型</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Suno AI 音乐发布 v5.5 强化定制能力</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Mistral AI 发布 Voxtral TTS 多语言语音生成</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> OpenAI 放弃 Sora 和 ChatGPT 情色模式</div>
+<div class="pl-item"><span class="tag" style="--c:#2563eb">开发工具</span> AI Agent 安全与零信任基础设施</div>
+<div class="pl-item"><span class="tag" style="--c:#0d9488">基础设施</span> SK hynix 准备美股 IPO 缓解「内存荒」</div>
+<div class="pl-item"><span class="tag" style="--c:#2563eb">开发工具</span> RAG 与数据处理工具新进展</div>
+<div class="pl-item"><span class="tag" style="--c:#ea580c">SEO</span> Google 2026 年 3 月核心更新与 Google-Agent SEO 变革</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Google Gemini 支持从其他 AI 导入记忆和聊天历史</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> WhatsApp 新增多账号支持与 AI 智能回复</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Wikipedia 全面禁止 AI 生成内容</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> LLM Agent 评测新基准：FinMCP-Bench 与 SlopCodeBench</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> LLM 推理优化与元认知研究</div>
+<div class="pl-item"><span class="tag" style="--c:#0d9488">基础设施</span> 数据中心能耗监管：美参议院要求公开电力账单</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Apple Siri 将开放接入第三方 AI 聊天机器人</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> $500 GPU 项目 ATLAS 在编码基准上超越 Claude Sonnet</div>
+<div class="pl-item"><span class="tag" style="--c:#ea580c">SEO</span> Ahrefs 解读 Google Web Guide 对 SEO 的影响</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> 字节跳动暂停 Seedance 2.0 AI 视频生成器全球推出</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Meta 准备推出两款新 Ray-Ban AI 眼镜</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Anthropic 发布 Claude Sonnet 4.6 和 Opus 4.6</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Qwen 发布 Qwen3.5 全系列开源模型</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> DeepSeek 密集发布 V3.2、OCR-2、Math-V2 等新模型</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Microsoft VibeVoice 开源项目</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> SakanaAI 发布 AI-Scientist-v2 自动科研系统</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Simon Willison: 用 Claude Opus 4.6 和 GPT-5.4 Vibe Coding SwiftUI</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Onyx: AI 企业搜索开源平台单日 512 stars</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Kimi 开放平台功能更新</div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> MemMA: 多智能体记忆协调与自进化框架</div>
+</div>
+
+</div><div id="source-overlay" class="overlay" onclick="if(event.target===this)this.classList.remove('show')"><div id="source-list" class="panel">
+<div class="panel-head">📊 信源列表 <span class="panel-close" onclick="closePanel(this)">&times;</span></div>
+<div class="pl-item"><span class="tier-badge" style="background:#909399">T4</span> <span class="pl-count">11</span> HN Show</div>
+<div class="pl-item"><span class="pl-count">8</span> Qwen (HF)</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> <span class="pl-count">6</span> Product Hunt AI</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> <span class="pl-count">6</span> GitHub Trending</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> <span class="pl-count">6</span> HuggingFace Papers</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> <span class="pl-count">5</span> AlternativeTo</div>
+<div class="pl-item"><span class="tier-badge" style="background:#67c23a">T3</span> <span class="pl-count">5</span> The Verge AI</div>
+<div class="pl-item"><span class="tier-badge" style="background:#67c23a">T3</span> <span class="pl-count">5</span> TechCrunch AI</div>
+<div class="pl-item"><span class="tier-badge" style="background:#67c23a">T3</span> <span class="pl-count">4</span> Search Engine Journal</div>
+<div class="pl-item"><span class="pl-count">4</span> deepseek-ai (HF)</div>
+<div class="pl-item"><span class="tier-badge" style="background:#909399">T4</span> <span class="pl-count">4</span> HackerNews</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> <span class="pl-count">4</span> ArXiv cs.CL</div>
+<div class="pl-item"><span class="pl-count">3</span> Anthropic Official</div>
+<div class="pl-item"><span class="tier-badge" style="background:#67c23a">T3</span> <span class="pl-count">1</span> Ahrefs Blog</div>
+<div class="pl-item"><span class="pl-count">1</span> Bluesky @simonwillison.net</div>
+<div class="pl-item"><span class="pl-count">1</span> Moonshot/Kimi Official</div>
+</div>
+
+</div><div id="channel-overlay" class="overlay" onclick="if(event.target===this)this.classList.remove('show')"><div id="channel-list" class="panel">
+<div class="panel-head">📡 渠道列表 <span class="panel-close" onclick="closePanel(this)">&times;</span></div>
+<div class="pl-tier">T2 平台</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> AlternativeTo</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> ArXiv cs.CL</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> GitHub Trending</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> HuggingFace Papers</div>
+<div class="pl-item"><span class="tier-badge" style="background:#4a9eff">T2</span> Product Hunt AI</div>
+<div class="pl-tier">T3 媒体</div>
+<div class="pl-item"><span class="tier-badge" style="background:#67c23a">T3</span> Ahrefs Blog</div>
+<div class="pl-item"><span class="tier-badge" style="background:#67c23a">T3</span> Search Engine Journal</div>
+<div class="pl-item"><span class="tier-badge" style="background:#67c23a">T3</span> TechCrunch AI</div>
+<div class="pl-item"><span class="tier-badge" style="background:#67c23a">T3</span> The Verge AI</div>
+<div class="pl-tier">T4 社区</div>
+<div class="pl-item"><span class="tier-badge" style="background:#909399">T4</span> HN Show</div>
+<div class="pl-item"><span class="tier-badge" style="background:#909399">T4</span> HackerNews</div>
+<div class="pl-tier">其他</div>
+<div class="pl-item"><span class="tier-badge" style="background:#666">其他</span> Anthropic Official</div>
+<div class="pl-item"><span class="tier-badge" style="background:#666">其他</span> Bluesky @simonwillison.net</div>
+<div class="pl-item"><span class="tier-badge" style="background:#666">其他</span> Moonshot/Kimi Official</div>
+<div class="pl-item"><span class="tier-badge" style="background:#666">其他</span> Qwen (HF)</div>
+<div class="pl-item"><span class="tier-badge" style="background:#666">其他</span> deepseek-ai (HF)</div>
+</div></div>
+
+<div class="filter-bar">
+<div class="filter-group"><span class="filter-label">分类</span><button class="filter-btn active" data-fk="topic" data-fv="all">全部</button><button class="filter-btn" data-fk="topic" data-fv="ai">AI</button><button class="filter-btn" data-fk="topic" data-fv="devtools">开发工具</button><button class="filter-btn" data-fk="topic" data-fv="infra">基础设施</button><button class="filter-btn" data-fk="topic" data-fv="seo">SEO</button></div>
+</div>
+<div class="filter-bar">
+<div class="filter-group"><span class="filter-label">类型</span><button class="filter-btn active" data-fk="type" data-fv="all">全部</button><button class="filter-btn" data-fk="type" data-fv="analysis">分析</button><button class="filter-btn" data-fk="type" data-fv="funding">融资</button><button class="filter-btn" data-fk="type" data-fv="market">市场</button><button class="filter-btn" data-fk="type" data-fv="opensource">开源</button><button class="filter-btn" data-fk="type" data-fv="product">产品</button><button class="filter-btn" data-fk="type" data-fv="research">论文</button><button class="filter-btn" data-fk="type" data-fv="tutorial">实战</button></div>
+</div>
+<div class="filter-bar">
+<div class="filter-group"><span class="filter-label">时间</span><button class="filter-btn active" data-fk="time" data-fv="all">今天 03/30</button><a class="filter-btn" href="2026-03-29.html">昨天 03/29</a><a class="filter-btn" href="2026-03-28.html">前天 03/28</a></div>
+</div>
+<div class="sort-bar">
+<span class="sort-label">排序</span>
+<button class="sort-btn" data-mode="category">📂 分类</button>
+<button class="sort-btn active" data-mode="time">🕐 时间</button>
+<button class="sort-btn" data-mode="score">🔥 重要度</button>
+</div>
+<div class="cards"><div class="card warm" data-time="2026-03-29T14:20:23+00:00" data-score="4" data-topic="ai" data-type="market">
+<div class="row">
+<div class="img" style="background-image:url(covers/7b2087a2f5.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#f59e0b">市场</span><span class="tm">03-29 22:20</span>
+</div>
+<div class="tt">AI 面部识别导致无辜女性被错误逮捕</div>
+<div class="sm">警方使用 AI 面部识别技术错误逮捕田纳西州女性</div>
+</div>
+</div>
+<div class="ins">💡 AI 面部识别冤案持续发生，技术滥用与监管滞后的矛盾加剧</div>
+<div class="sl">
+<a href="https://www.cnn.com/2026/03/29/us/angela-lipps-ai-facial-recognition" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HackerNews</span><span class="st">Police used AI facial recognition to wrongly arrest TN woman for crimes in ND</span></a>
+</div>
+</div>
+<div class="card hot" data-time="2026-03-29T12:38:28+00:00" data-score="10" data-topic="ai" data-type="opensource">
+<div class="row">
+<div class="img" style="background-image:url(covers/2dd508fdc0.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#06b6d4">开源</span><span class="tm">03-29 20:38</span>
+</div>
+<div class="tt">PyNear: 比 Faiss 更快的精确和近似 KNN 库</div>
+<div class="sm">开源项目 PyNear 在精确和近似 KNN 上均超越 Faiss 性能</div>
+</div>
+</div>
+<div class="ins">💡 向量检索性能天花板被持续突破，RAG 基础组件仍有大量优化空间</div>
+<div class="sl">
+<a href="https://news.ycombinator.com/item?id=47562682" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: PyNear – exact and approximate KNN, faster than Faiss</span></a>
+</div>
+</div>
+<div class="card hot" data-time="2026-03-29T12:10:27+00:00" data-score="9" data-topic="devtools" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/a603746999.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#2563eb">开发工具</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-29 20:10</span>
+</div>
+<div class="tt">Claude Code 生态工具链全面爆发</div>
+<div class="sm">Claude Code 周边工具涌现：学习指南、记忆管理、使用技巧、网关、浏览器集成等</div>
+</div>
+</div>
+<div class="ins">💡 Claude Code 正成为开发者的 IDE 替代品，生态繁荣度已超越 GitHub Copilot</div>
+<div class="sl">
+<a href="https://blog.dailydoseofds.com/p/anatomy-of-the-claude-folder" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HackerNews</span><span class="st">Anatomy of the .claude/ Folder</span></a>
+<a href="https://www.producthunt.com/products/claude-code-auto-fix-in-the-cloud" target="_blank" class="si"><span class="bg" style="--c:#da552f">PH</span><span class="sn">Product Hunt AI</span><span class="st">Claude Code auto-fix</span></a>
+<a href="https://www.producthunt.com/products/hoop-dev-for-databases" target="_blank" class="si"><span class="bg" style="--c:#da552f">PH</span><span class="sn">Product Hunt AI</span><span class="st">hoop.dev - Claude Code Gateway</span></a>
+<a href="https://www.producthunt.com/products/glance-give-claude-code-a-real-browser" target="_blank" class="si"><span class="bg" style="--c:#da552f">PH</span><span class="sn">Product Hunt AI</span><span class="st">Glance</span></a>
+<a href="https://crates.io/crates/git-layer" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: Layer – Hide your personal AI files from Git without touching gitignore</span></a>
+<a href="https://www.npmjs.com/package/hijackclaw" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: Run Claude Code using ChatGPT subscription</span></a>
+<a href="https://news.ycombinator.com/item?id=47562440" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: Agent Orchestrator, a local-first Harness Engineering control plane</span></a>
+<a href="https://github.com/shareAI-lab/learn-claude-code" target="_blank" class="si"><span class="bg" style="--c:#7c3aed">GitHub</span><span class="sn">GitHub Trending</span><span class="st">shareAI-lab/learn-claude-code (912 stars today)</span></a>
+<a href="https://github.com/thedotmack/claude-mem" target="_blank" class="si"><span class="bg" style="--c:#7c3aed">GitHub</span><span class="sn">GitHub Trending</span><span class="st">thedotmack/claude-mem (389 stars today)</span></a>
+<a href="https://github.com/luongnv89/claude-howto" target="_blank" class="si"><span class="bg" style="--c:#7c3aed">GitHub</span><span class="sn">GitHub Trending</span><span class="st">luongnv89/claude-howto (1,121 stars today)</span></a>
+</div>
+</div>
+<div class="card " data-time="2026-03-28T23:00:00+00:00" data-score="3" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/5fa01c5c38.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-29 07:00</span>
+</div>
+<div class="tt">Bluesky 推出 AI 应用 Attie 构建自定义 Feed</div>
+<div class="sm">Bluesky 推出 AI 驱动的 Attie 应用，帮助用户构建个性化内容 feed</div>
+</div>
+</div>
+<div class="ins">💡 去中心化社交+AI 算法推荐，Bluesky 试图在开放协议上重建个性化体验</div>
+<div class="sl">
+<a href="https://techcrunch.com/2026/03/28/bluesky-leans-into-ai-with-attie-an-app-for-building-custom-feeds/" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">TC</span><span class="sn">TechCrunch AI</span><span class="st">Bluesky leans into AI with Attie, an app for building custom feeds</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-28T18:38:59+00:00" data-score="6" data-topic="ai" data-type="research">
+<div class="row">
+<div class="img" style="background-image:url(covers/9884264e86.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#8b5cf6">研究</span><span class="tm">03-29 02:38</span>
+</div>
+<div class="tt">人类+AI 协作攻克 Knuth 「Claude Cycles」数学问题</div>
+<div class="sm">研究者结合人类、AI 和证明助手进一步推进 Knuth 提出的 Claude Cycles 问题</div>
+</div>
+</div>
+<div class="ins">💡 人机协作在数学证明领域展现强大潜力，AI 不是替代而是放大人类能力</div>
+<div class="sl">
+<a href="https://twitter.com/BoWang87/status/2037648937453232504" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HackerNews</span><span class="st">Further human + AI + proof assistant work on Knuth's &quot;Claude Cycles&quot; problem</span></a>
+</div>
+</div>
+<div class="card hot" data-time="2026-03-28T18:17:51+00:00" data-score="8" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/e2075f1453.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-29 02:17</span>
+</div>
+<div class="tt">Google 发布 Gemini 3.1 Flash Live 最拟人 AI 语音模型</div>
+<div class="sm">Google 推出 Gemini 3.1 Flash Live，号称最接近人声的 AI 语音模型，全球上线</div>
+</div>
+</div>
+<div class="ins">💡 实时语音交互成 AI 助手差异化核心，Google 押注自然对话体验</div>
+<div class="sl">
+<a href="https://www.searchenginejournal.com/google-takes-search-live-global-with-gemini-3-1-flash-live/570602/" target="_blank" class="si"><span class="bg" style="--c:#1a6aff">SEJ</span><span class="sn">Search Engine Journal</span><span class="st">Google Takes Search Live Global With Gemini 3.1 Flash Live via @sejournal, @Matt</span></a>
+<a href="https://alternativeto.net/news/2026/3/google-launches-gemini-3-1-flash-live-with-its-most-human-like-sounding-ai-voice-model-yet/" target="_blank" class="si"><span class="bg" style="--c:#e8503a">Alt</span><span class="sn">AlternativeTo</span><span class="st">Google launches Gemini 3.1 Flash Live with its most human-like sounding AI voice</span></a>
+</div>
+</div>
+<div class="card " data-time="2026-03-28T14:33:10-04:00" data-score="3" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/b5482ead89.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-29 02:33</span>
+</div>
+<div class="tt">Suno AI 音乐发布 v5.5 强化定制能力</div>
+<div class="sm">Suno 推出 v5.5 版本，强调音乐定制和个性化创作能力</div>
+</div>
+</div>
+<div class="ins">💡 AI 音乐从一键生成转向精细控制，创作者工具化是变现关键</div>
+<div class="sl">
+<a href="https://www.theverge.com/entertainment/903056/suno-ai-music-v5-5-model" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">Verge</span><span class="sn">The Verge AI</span><span class="st">Suno leans into customization with v5.5</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-28T11:30:00+00:00" data-score="5" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/b994532659.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-28 19:30</span>
+</div>
+<div class="tt">Mistral AI 发布 Voxtral TTS 多语言语音生成</div>
+<div class="sm">Mistral AI 推出 Voxtral TTS，支持 9 种语言的低延迟语音生成</div>
+</div>
+</div>
+<div class="ins">💡 TTS 市场又添新玩家，多语言+低延迟是 AI 语音助手落地的关键</div>
+<div class="sl">
+<a href="https://www.producthunt.com/products/mistral-7b" target="_blank" class="si"><span class="bg" style="--c:#da552f">PH</span><span class="sn">Product Hunt AI</span><span class="st">Voxtral TTS by Mistral AI</span></a>
+<a href="https://alternativeto.net/news/2026/3/mistral-ai-unveils-voxtral-tts-for-nuanced-and-low-latency-speech-generation-in-9-languages/" target="_blank" class="si"><span class="bg" style="--c:#e8503a">Alt</span><span class="sn">AlternativeTo</span><span class="st">Mistral AI unveils Voxtral TTS for nuanced &amp; low-latency speech generation in 9 </span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-28T08:00:00-04:00" data-score="6" data-topic="ai" data-type="market">
+<div class="row">
+<div class="img" style="background-image:url(covers/010797e013.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#f59e0b">市场</span><span class="tm">03-28 20:00</span>
+</div>
+<div class="tt">OpenAI 放弃 Sora 和 ChatGPT 情色模式</div>
+<div class="sm">OpenAI 终止 AI 视频生成工具 Sora，并放弃 ChatGPT 情色模式实验</div>
+</div>
+</div>
+<div class="ins">💡 OpenAI 持续收缩非核心产品线，Sora 之死反映 AI 视频赛道竞争惨烈</div>
+<div class="sl">
+<a href="https://techcrunch.com/2026/03/26/openai-abandons-yet-another-side-quest-chatgpts-erotic-mode/" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">TC</span><span class="sn">TechCrunch AI</span><span class="st">OpenAI abandons yet another side quest: ChatGPT’s erotic mode</span></a>
+<a href="https://www.theverge.com/ai-artificial-intelligence/902368/openai-sora-dead-ai-video-generation-competition" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">Verge</span><span class="sn">The Verge AI</span><span class="st">Why OpenAI killed Sora</span></a>
+</div>
+</div>
+<div class="card hot" data-time="2026-03-28T03:17:08+00:00" data-score="8" data-topic="devtools" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/5237e7cf80.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#2563eb">开发工具</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-28 11:17</span>
+</div>
+<div class="tt">AI Agent 安全与零信任基础设施</div>
+<div class="sm">多个 AI Agent 安全项目涌现：零信任 LLM 网关、零知识隐写术、安全框架等</div>
+</div>
+</div>
+<div class="ins">💡 AI Agent 爆发催生安全基础设施需求，零信任架构正成为 Agent 部署标配</div>
+<div class="sl">
+<a href="https://github.com/openziti/llm-gateway" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: LLM-Gateway – Zero-Trust LLM Gateway</span></a>
+<a href="https://news.ycombinator.com/item?id=47551236" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: Sigil – A zero-knowledge steganography vault for AI training data</span></a>
+<a href="https://clawrun.sh/?hn" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: ClawRun – Deploy AI agents to secure sandboxes with one command</span></a>
+<a href="https://acacian.github.io/aegis/playground/" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: Aegis – Security framework for AI agents</span></a>
+<a href="https://artiqal.vercel.app/hollow" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: Hollow – serverless web perception for AI agents</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-27T19:11:28+00:00" data-score="7" data-topic="infra" data-type="funding">
+<div class="row">
+<div class="img" style="background-image:url(covers/c0c52cd678.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#0d9488">基础设施</span><span class="tag" style="--c:#ef4444">融资</span><span class="tm">03-28 03:11</span>
+</div>
+<div class="tt">SK hynix 准备美股 IPO 缓解「内存荒」</div>
+<div class="sm">内存芯片巨头 SK hynix 计划美国上市，有望缓解 AI 带来的内存供应紧张</div>
+</div>
+</div>
+<div class="ins">💡 AI 算力需求催生上游芯片公司巨额融资，HBM 供应链是隐形瓶颈</div>
+<div class="sl">
+<a href="https://techcrunch.com/2026/03/27/memory-chip-giant-sk-hynix-could-help-end-rammageddon-with-blockbuster-us-ipo/" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">TC</span><span class="sn">TechCrunch AI</span><span class="st">Memory chip giant SK hynix could help end ‘RAMmageddon’ with blockbuster US IPO</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-27T13:53:11+00:00" data-score="6" data-topic="devtools" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/c22ab45dec.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#2563eb">开发工具</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-27 21:53</span>
+</div>
+<div class="tt">RAG 与数据处理工具新进展</div>
+<div class="sm">DuoRAG 自进化双栈 RAG 和文档处理 pipeline 评估工具发布</div>
+</div>
+</div>
+<div class="ins">💡 RAG 架构从单一检索走向自学习和自进化，工程化程度持续提升</div>
+<div class="sl">
+<a href="https://github.com/cagriy/duo-rag" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: DuoRAG – A dual stack RAG that self-evolves</span></a>
+<a href="https://ragbandit.com" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HN Show</span><span class="st">Show HN: A tool to create and evaluate document processing pipelines for RAG</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-27T12:30:42+00:00" data-score="6" data-topic="seo" data-type="market">
+<div class="row">
+<div class="img" style="background-image:url(covers/aacbc7e64e.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#ea580c">SEO</span><span class="tag" style="--c:#f59e0b">市场</span><span class="tm">03-27 20:30</span>
+</div>
+<div class="tt">Google 2026 年 3 月核心更新与 Google-Agent SEO 变革</div>
+<div class="sm">Google 开始推出 2026 年 3 月核心更新，Google-Agent 被称为 SEO 史上最大思维转变</div>
+</div>
+</div>
+<div class="ins">💡 搜索引擎从索引转向 Agent，SEO 从优化页面转向优化 AI 可消费的结构化数据</div>
+<div class="sl">
+<a href="https://www.searchenginejournal.com/google-begins-rolling-out-march-2026-core-update/570657/" target="_blank" class="si"><span class="bg" style="--c:#1a6aff">SEJ</span><span class="sn">Search Engine Journal</span><span class="st">Google Begins Rolling Out March 2026 Core Update via @sejournal, @MattGSouthern</span></a>
+<a href="https://www.searchenginejournal.com/seo-pulse-google-tests-ai-headlines-rolls-out-spam-update/570613/" target="_blank" class="si"><span class="bg" style="--c:#1a6aff">SEJ</span><span class="sn">Search Engine Journal</span><span class="st">Google Tests AI Headlines, Rolls Out Spam Update – SEO Pulse via @sejournal, @Ma</span></a>
+</div>
+</div>
+<div class="card hot" data-time="2026-03-27T11:30:00+00:00" data-score="9" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/69fe8bd3ff.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-27 19:30</span>
+</div>
+<div class="tt">Google Gemini 支持从其他 AI 导入记忆和聊天历史</div>
+<div class="sm">Google Gemini 新增记忆导入功能，用户可从 ChatGPT 等竞品迁移上下文和对话历史</div>
+</div>
+</div>
+<div class="ins">💡 AI 平台竞争进入用户数据迁移阶段，降低切换成本成新战场</div>
+<div class="sl">
+<a href="https://www.theverge.com/ai-artificial-intelligence/902085/google-gemini-import-memory-chat-history" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">Verge</span><span class="sn">The Verge AI</span><span class="st">Google is making it easier to import another AI’s memory into Gemini</span></a>
+<a href="https://techcrunch.com/2026/03/26/you-can-now-transfer-your-chats-and-personal-information-from-other-chatbots-directly-into-gemini/" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">TC</span><span class="sn">TechCrunch AI</span><span class="st">You can now transfer your chats and personal information from other chatbots dir</span></a>
+<a href="https://www.producthunt.com/products/gemini-memory-import" target="_blank" class="si"><span class="bg" style="--c:#da552f">PH</span><span class="sn">Product Hunt AI</span><span class="st">Google Gemini Memory Import</span></a>
+<a href="https://www.producthunt.com/products/gemini-export-studio" target="_blank" class="si"><span class="bg" style="--c:#da552f">PH</span><span class="sn">Product Hunt AI</span><span class="st">Gemini Export Studio</span></a>
+<a href="https://alternativeto.net/news/2026/3/google-gemini-now-lets-users-import-memory-context-and-chat-history-from-other-ai-apps/" target="_blank" class="si"><span class="bg" style="--c:#e8503a">Alt</span><span class="sn">AlternativeTo</span><span class="st">Google Gemini now lets users import memory, context, and chat history from other</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-27T10:00:00+00:00" data-score="6" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/634efd1f39.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-27 18:00</span>
+</div>
+<div class="tt">WhatsApp 新增多账号支持与 AI 智能回复</div>
+<div class="sm">WhatsApp 在 iOS 上添加多账号支持，并推出基于对话上下文的 AI 自动回复</div>
+</div>
+</div>
+<div class="ins">💡 Meta 将 AI 深度嵌入即时通讯，聊天场景的 AI 渗透率正快速提升</div>
+<div class="sl">
+<a href="https://alternativeto.net/news/2026/3/whatsapp-adds-multi-account-support-on-ios-and-ai-powered-replies-based-on-conversations/" target="_blank" class="si"><span class="bg" style="--c:#e8503a">Alt</span><span class="sn">AlternativeTo</span><span class="st">WhatsApp adds multi-account support on iOS and AI-powered replies based on conve</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-27T09:24:48+00:00" data-score="4" data-topic="ai" data-type="market">
+<div class="row">
+<div class="img" style="background-image:url(covers/0c9d94bfb0.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#f59e0b">市场</span><span class="tm">03-27 17:24</span>
+</div>
+<div class="tt">Wikipedia 全面禁止 AI 生成内容</div>
+<div class="sm">维基百科正式禁止使用 AI 生成内容，强化人工编辑标准</div>
+</div>
+</div>
+<div class="ins">💡 知识权威平台对 AI 内容说不，信息可信度成为 AI 时代核心议题</div>
+<div class="sl">
+<a href="https://www.searchenginejournal.com/wikipedia-bans-use-of-ai-generated-content/570651/" target="_blank" class="si"><span class="bg" style="--c:#1a6aff">SEJ</span><span class="sn">Search Engine Journal</span><span class="st">Wikipedia Bans Use Of AI-Generated Content via @sejournal, @martinibuster</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-27T00:00:00-04:00" data-score="6" data-topic="ai" data-type="research">
+<div class="row">
+<div class="img" style="background-image:url(covers/72692fa70e.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#8b5cf6">研究</span><span class="tm">03-27 12:00</span>
+</div>
+<div class="tt">LLM Agent 评测新基准：FinMCP-Bench 与 SlopCodeBench</div>
+<div class="sm">新论文提出金融工具使用基准 FinMCP-Bench 和编码退化基准 SlopCodeBench</div>
+</div>
+</div>
+<div class="ins">💡 Agent 评测从通用能力转向垂直场景和长期任务退化，更贴近真实使用</div>
+<div class="sl">
+<a href="https://arxiv.org/abs/2603.24943" target="_blank" class="si"><span class="bg" style="--c:#ffd21e">HF</span><span class="sn">HuggingFace Papers</span><span class="st">FinMCP-Bench: Benchmarking LLM Agents for Real-World Financial Tool Use under th</span></a>
+<a href="https://arxiv.org/abs/2603.24755" target="_blank" class="si"><span class="bg" style="--c:#ffd21e">HF</span><span class="sn">HuggingFace Papers</span><span class="st">SlopCodeBench: Benchmarking How Coding Agents Degrade Over Long-Horizon Iterativ</span></a>
+<a href="https://arxiv.org/abs/2603.25268" target="_blank" class="si"><span class="bg" style="--c:#b31b1b">ArXiv</span><span class="sn">ArXiv cs.CL</span><span class="st">CRAFT: Grounded Multi-Agent Coordination Under Partial Information</span></a>
+</div>
+</div>
+<div class="card hot" data-time="2026-03-27T00:00:00-04:00" data-score="8" data-topic="ai" data-type="research">
+<div class="row">
+<div class="img" style="background-image:url(covers/644cfdf5cd.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#8b5cf6">研究</span><span class="tm">03-27 12:00</span>
+</div>
+<div class="tt">LLM 推理优化与元认知研究</div>
+<div class="sm">多篇论文探索 LLM 推理提速、置信度校准和元认知能力评估</div>
+</div>
+</div>
+<div class="ins">💡 让 LLM 知道自己不知道什么，是可靠 AI 系统的关键一步</div>
+<div class="sl">
+<a href="https://arxiv.org/abs/2603.14636" target="_blank" class="si"><span class="bg" style="--c:#ffd21e">HF</span><span class="sn">HuggingFace Papers</span><span class="st">Nudging Hidden States: Training-Free Model Steering for Chain-of-Thought Reasoni</span></a>
+<a href="https://arxiv.org/abs/2603.24844" target="_blank" class="si"><span class="bg" style="--c:#ffd21e">HF</span><span class="sn">HuggingFace Papers</span><span class="st">Reaching Beyond the Mode: RL for Distributional Reasoning in Language Models</span></a>
+<a href="https://arxiv.org/abs/2603.25702" target="_blank" class="si"><span class="bg" style="--c:#ffd21e">HF</span><span class="sn">HuggingFace Papers</span><span class="st">S2D2: Fast Decoding for Diffusion LLMs via Training-Free Self-Speculation</span></a>
+<a href="https://arxiv.org/abs/2603.24840" target="_blank" class="si"><span class="bg" style="--c:#b31b1b">ArXiv</span><span class="sn">ArXiv cs.CL</span><span class="st">Prune as You Generate: Online Rollout Pruning for Faster and Better RLVR</span></a>
+<a href="https://arxiv.org/abs/2603.25052" target="_blank" class="si"><span class="bg" style="--c:#b31b1b">ArXiv</span><span class="sn">ArXiv cs.CL</span><span class="st">Closing the Confidence-Faithfulness Gap in Large Language Models</span></a>
+<a href="https://arxiv.org/abs/2603.25112" target="_blank" class="si"><span class="bg" style="--c:#b31b1b">ArXiv</span><span class="sn">ArXiv cs.CL</span><span class="st">Do LLMs Know What They Know? Measuring Metacognitive Efficiency with Signal Dete</span></a>
+</div>
+</div>
+<div class="card " data-time="2026-03-26T18:23:31+00:00" data-score="3" data-topic="infra" data-type="market">
+<div class="row">
+<div class="img" style="background-image:url(covers/67eb7821b1.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#0d9488">基础设施</span><span class="tag" style="--c:#f59e0b">市场</span><span class="tm">03-27 02:23</span>
+</div>
+<div class="tt">数据中心能耗监管：美参议院要求公开电力账单</div>
+<div class="sm">美国参议院推动数据中心能耗透明化，要求公开电力使用数据</div>
+</div>
+</div>
+<div class="ins">💡 AI 算力扩张的能源代价正引发政策层面关注，绿色 AI 不再只是口号</div>
+<div class="sl">
+<a href="https://techcrunch.com/2026/03/26/data-centers-get-ready-the-senate-wants-to-see-your-power-bills/" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">TC</span><span class="sn">TechCrunch AI</span><span class="st">Data centers get ready — the Senate wants to see your power bills</span></a>
+</div>
+</div>
+<div class="card " data-time="2026-03-26T17:31:27-04:00" data-score="3" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/dccda5aa0c.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-27 05:31</span>
+</div>
+<div class="tt">Apple Siri 将开放接入第三方 AI 聊天机器人</div>
+<div class="sm">据报道 Apple 将允许其他 AI 聊天机器人接入 Siri，在 iOS 27 中实现</div>
+</div>
+</div>
+<div class="ins">💡 Apple 从封闭走向开放 AI 生态，承认自研 AI 不足，平台化策略转型</div>
+<div class="sl">
+<a href="https://www.theverge.com/tech/902048/apple-siri-ai-chatbot-update-ios-27" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">Verge</span><span class="sn">The Verge AI</span><span class="st">Apple will reportedly allow other AI chatbots to plug into Siri</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-26T17:31:24+00:00" data-score="7" data-topic="ai" data-type="research">
+<div class="row">
+<div class="img" style="background-image:url(covers/decc7c731e.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#8b5cf6">研究</span><span class="tm">03-27 01:31</span>
+</div>
+<div class="tt">$500 GPU 项目 ATLAS 在编码基准上超越 Claude Sonnet</div>
+<div class="sm">开源项目 ATLAS 使用 $500 GPU 在编码基准测试中超越 Claude Sonnet</div>
+</div>
+</div>
+<div class="ins">💡 小算力+好算法挑战大模型，编码能力可能不需要万卡集群</div>
+<div class="sl">
+<a href="https://github.com/itigges22/ATLAS" target="_blank" class="si"><span class="bg" style="--c:#ff6600">HN</span><span class="sn">HackerNews</span><span class="st">$500 GPU outperforms Claude Sonnet on coding benchmarks</span></a>
+</div>
+</div>
+<div class="card warm" data-time="2026-03-26T16:50:05+00:00" data-score="7" data-topic="seo" data-type="analysis">
+<div class="row">
+<div class="img" style="background-image:url(covers/0890fe2257.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#ea580c">SEO</span><span class="tag" style="--c:#6366f1">分析</span><span class="tm">03-27 00:50</span>
+</div>
+<div class="tt">Ahrefs 解读 Google Web Guide 对 SEO 的影响</div>
+<div class="sm">Ahrefs 深度分析 Google Web Guide 是什么、如何运作以及对 SEO 的影响</div>
+</div>
+</div>
+<div class="ins">💡 Google 持续重塑搜索体验，SEO 从业者需要重新理解内容分发逻辑</div>
+<div class="sl">
+<a href="https://ahrefs.com/blog/google-web-guide/" target="_blank" class="si"><span class="bg" style="--c:#1a6aff">Ahrefs</span><span class="sn">Ahrefs Blog</span><span class="st">Google Web Guide: What It Is, How It Works, and What It Means for SEO</span></a>
+</div>
+</div>
+<div class="card " data-time="2026-03-26T16:14:55+00:00" data-score="3" data-topic="ai" data-type="market">
+<div class="row">
+<div class="img" style="background-image:url(covers/7cb1cd38d9.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#f59e0b">市场</span><span class="tm">03-27 00:14</span>
+</div>
+<div class="tt">字节跳动暂停 Seedance 2.0 AI 视频生成器全球推出</div>
+<div class="sm">ByteDance 据报暂停 Seedance 2.0 AI 视频生成器的全球发布计划</div>
+</div>
+</div>
+<div class="ins">💡 中国 AI 视频出海受阻，合规和地缘政治仍是最大障碍</div>
+<div class="sl">
+<a href="https://alternativeto.net/news/2026/3/bytedance-reportedly-halts-global-rollout-of-seedance-2-0-ai-video-generator/" target="_blank" class="si"><span class="bg" style="--c:#e8503a">Alt</span><span class="sn">AlternativeTo</span><span class="st">ByteDance reportedly halts global rollout of Seedance 2.0 AI video generator</span></a>
+</div>
+</div>
+<div class="card " data-time="2026-03-26T12:30:00-04:00" data-score="3" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/a22f751a3f.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span><span class="tm">03-27 00:30</span>
+</div>
+<div class="tt">Meta 准备推出两款新 Ray-Ban AI 眼镜</div>
+<div class="sm">Meta 即将推出两款新的 Ray-Ban AI 智能眼镜</div>
+</div>
+</div>
+<div class="ins">💡 AI 可穿戴设备从尝鲜走向产品矩阵，Meta 押注 AR 眼镜作为下一代计算平台</div>
+<div class="sl">
+<a href="https://www.theverge.com/column/901314/meta-new-ray-ban-ai-glasses" target="_blank" class="si"><span class="bg" style="--c:#0a9e01">Verge</span><span class="sn">The Verge AI</span><span class="st">Meta gets ready to launch two new Ray-Ban AI glasses</span></a>
+</div>
+</div>
+<div class="card " data-time="" data-score="3" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/e65e3a2284.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span>
+</div>
+<div class="tt">Anthropic 发布 Claude Sonnet 4.6 和 Opus 4.6</div>
+<div class="sm">Anthropic 发布 Claude Sonnet 4.6 与 Opus 4.6 新版本，付费用户数激增</div>
+</div>
+</div>
+<div class="ins">💡 Anthropic 同时发布两档模型，企业端渗透加速，正在蚕食 OpenAI 市场份额</div>
+<div class="sl">
+<a href="https://www.anthropic.com/news/claude-sonnet-4-6" target="_blank" class="si"><span class="bg" style="--c:#555">Anthro</span><span class="sn">Anthropic Official</span><span class="st">Introducing Claude Sonnet 4.6</span></a>
+<a href="https://www.anthropic.com/news/claude-opus-4-6" target="_blank" class="si"><span class="bg" style="--c:#555">Anthro</span><span class="sn">Anthropic Official</span><span class="st">Introducing Claude Opus 4.6</span></a>
+<a href="https://www.anthropic.com/news/claude-is-a-space-to-think" target="_blank" class="si"><span class="bg" style="--c:#555">Anthro</span><span class="sn">Anthropic Official</span><span class="st">Claude is a space to think</span></a>
+</div>
+</div>
+<div class="card " data-time="" data-score="3" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/f52577a8e0.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span>
+</div>
+<div class="tt">Qwen 发布 Qwen3.5 全系列开源模型</div>
+<div class="sm">阿里 Qwen 团队一口气发布 Qwen3.5 全系列模型，从 0.8B 到 397B 多种尺寸</div>
+</div>
+</div>
+<div class="ins">💡 中国开源大模型持续追赶，MoE 架构全面铺开，量化版本同步发布降低部署门槛</div>
+<div class="sl">
+<a href="https://huggingface.co/Qwen/Qwen3.5-397B-A17B" target="_blank" class="si"><span class="bg" style="--c:#555">Qwen (</span><span class="sn">Qwen (HF)</span><span class="st">Qwen/Qwen3.5-397B-A17B</span></a>
+<a href="https://huggingface.co/Qwen/Qwen3.5-35B-A3B-GPTQ-Int4" target="_blank" class="si"><span class="bg" style="--c:#555">Qwen (</span><span class="sn">Qwen (HF)</span><span class="st">Qwen/Qwen3.5-35B-A3B-GPTQ-Int4</span></a>
+<a href="https://huggingface.co/Qwen/Qwen3.5-27B-GPTQ-Int4" target="_blank" class="si"><span class="bg" style="--c:#555">Qwen (</span><span class="sn">Qwen (HF)</span><span class="st">Qwen/Qwen3.5-27B-GPTQ-Int4</span></a>
+<a href="https://huggingface.co/Qwen/Qwen3.5-122B-A10B-GPTQ-Int4" target="_blank" class="si"><span class="bg" style="--c:#555">Qwen (</span><span class="sn">Qwen (HF)</span><span class="st">Qwen/Qwen3.5-122B-A10B-GPTQ-Int4</span></a>
+<a href="https://huggingface.co/Qwen/Qwen3.5-0.8B" target="_blank" class="si"><span class="bg" style="--c:#555">Qwen (</span><span class="sn">Qwen (HF)</span><span class="st">Qwen/Qwen3.5-0.8B</span></a>
+<a href="https://huggingface.co/Qwen/Qwen3.5-2B" target="_blank" class="si"><span class="bg" style="--c:#555">Qwen (</span><span class="sn">Qwen (HF)</span><span class="st">Qwen/Qwen3.5-2B</span></a>
+<a href="https://huggingface.co/Qwen/Qwen3.5-9B-Base" target="_blank" class="si"><span class="bg" style="--c:#555">Qwen (</span><span class="sn">Qwen (HF)</span><span class="st">Qwen/Qwen3.5-9B-Base</span></a>
+<a href="https://huggingface.co/Qwen/Qwen3.5-4B-Base" target="_blank" class="si"><span class="bg" style="--c:#555">Qwen (</span><span class="sn">Qwen (HF)</span><span class="st">Qwen/Qwen3.5-4B-Base</span></a>
+</div>
+</div>
+<div class="card warm" data-time="" data-score="4" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/1f9d22949e.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span>
+</div>
+<div class="tt">DeepSeek 密集发布 V3.2、OCR-2、Math-V2 等新模型</div>
+<div class="sm">DeepSeek 发布 V3.2 系列及 OCR-2、Math-V2 专项模型，覆盖通用到垂直场景</div>
+</div>
+</div>
+<div class="ins">💡 DeepSeek 从单一对话模型扩展为多模态矩阵，OCR 和数学推理是差异化切入点</div>
+<div class="sl">
+<a href="https://huggingface.co/deepseek-ai/DeepSeek-OCR-2" target="_blank" class="si"><span class="bg" style="--c:#555">deepse</span><span class="sn">deepseek-ai (HF)</span><span class="st">deepseek-ai/DeepSeek-OCR-2</span></a>
+<a href="https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Speciale" target="_blank" class="si"><span class="bg" style="--c:#555">deepse</span><span class="sn">deepseek-ai (HF)</span><span class="st">deepseek-ai/DeepSeek-V3.2-Speciale</span></a>
+<a href="https://huggingface.co/deepseek-ai/DeepSeek-Math-V2" target="_blank" class="si"><span class="bg" style="--c:#555">deepse</span><span class="sn">deepseek-ai (HF)</span><span class="st">deepseek-ai/DeepSeek-Math-V2</span></a>
+<a href="https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp" target="_blank" class="si"><span class="bg" style="--c:#555">deepse</span><span class="sn">deepseek-ai (HF)</span><span class="st">deepseek-ai/DeepSeek-V3.2-Exp</span></a>
+</div>
+</div>
+<div class="card warm" data-time="" data-score="4" data-topic="ai" data-type="opensource">
+<div class="row">
+<div class="img" style="background-image:url(covers/2ebb476654.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#06b6d4">开源</span>
+</div>
+<div class="tt">Microsoft VibeVoice 开源项目</div>
+<div class="sm">Microsoft 开源 VibeVoice 项目，GitHub 单日获 320 stars</div>
+</div>
+</div>
+<div class="ins">💡 微软持续开源 AI 工具，语音赛道竞争白热化</div>
+<div class="sl">
+<a href="https://github.com/microsoft/VibeVoice" target="_blank" class="si"><span class="bg" style="--c:#7c3aed">GitHub</span><span class="sn">GitHub Trending</span><span class="st">microsoft/VibeVoice (320 stars today)</span></a>
+</div>
+</div>
+<div class="card " data-time="" data-score="3" data-topic="ai" data-type="opensource">
+<div class="row">
+<div class="img" style="background-image:url(covers/cacb21aa7e.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#06b6d4">开源</span>
+</div>
+<div class="tt">SakanaAI 发布 AI-Scientist-v2 自动科研系统</div>
+<div class="sm">SakanaAI 开源 AI-Scientist-v2，自动化科学研究系统获关注</div>
+</div>
+</div>
+<div class="ins">💡 AI 辅助科研从论文摘要走向自主实验设计，科研效率或迎质变</div>
+<div class="sl">
+<a href="https://github.com/SakanaAI/AI-Scientist-v2" target="_blank" class="si"><span class="bg" style="--c:#7c3aed">GitHub</span><span class="sn">GitHub Trending</span><span class="st">SakanaAI/AI-Scientist-v2 (125 stars today)</span></a>
+</div>
+</div>
+<div class="card hot" data-time="" data-score="9" data-topic="ai" data-type="tutorial">
+<div class="row">
+<div class="img" style="background-image:url(covers/76183576fb.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#10b981">实战</span>
+</div>
+<div class="tt">Simon Willison: 用 Claude Opus 4.6 和 GPT-5.4 Vibe Coding SwiftUI</div>
+<div class="sm">Simon Willison 分享使用 Claude Opus 4.6 和 GPT-5.4 vibe coding SwiftUI 菜单栏应用的体验</div>
+</div>
+</div>
+<div class="ins">💡 Vibe coding 从实验走向日常，顶级开发者已将 AI 编程作为默认工作流</div>
+<div class="sl">
+<a href="https://bsky.app/profile/simonwillison.net/post/3mi2zaqvlmc2w" target="_blank" class="si"><span class="bg" style="--c:#0085ff">Bluesky</span><span class="sn">Bluesky @simonwillison.net</span><span class="st">@simonwillison.net: I've been vibe coding SwiftUI menu bar apps for my new Mac, </span></a>
+</div>
+</div>
+<div class="card warm" data-time="" data-score="7" data-topic="ai" data-type="opensource">
+<div class="row">
+<div class="img" style="background-image:url(covers/4c3589bef0.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#06b6d4">开源</span>
+</div>
+<div class="tt">Onyx: AI 企业搜索开源平台单日 512 stars</div>
+<div class="sm">Onyx（原 Danswer）企业 AI 搜索开源项目持续走热</div>
+</div>
+</div>
+<div class="ins">💡 企业知识管理+AI 搜索是刚需赛道，开源方案正在瓦解传统企业搜索壁垒</div>
+<div class="sl">
+<a href="https://github.com/onyx-dot-app/onyx" target="_blank" class="si"><span class="bg" style="--c:#7c3aed">GitHub</span><span class="sn">GitHub Trending</span><span class="st">onyx-dot-app/onyx (512 stars today)</span></a>
+</div>
+</div>
+<div class="card warm" data-time="" data-score="4" data-topic="ai" data-type="product">
+<div class="row">
+<div class="img" style="background-image:url(covers/1c0be70a30.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#3b82f6">产品发布</span>
+</div>
+<div class="tt">Kimi 开放平台功能更新</div>
+<div class="sm">Moonshot Kimi 开放平台发布新功能更新日志</div>
+</div>
+</div>
+<div class="ins">💡 国产大模型 API 平台持续迭代，开发者生态建设是商业化关键</div>
+<div class="sl">
+<a href="https://platform.moonshot.ai/blog/posts/changelog" target="_blank" class="si"><span class="bg" style="--c:#555">Moonsh</span><span class="sn">Moonshot/Kimi Official</span><span class="st">Kimi Open Platform: New Feature Release Log</span></a>
+</div>
+</div>
+<div class="card hot" data-time="" data-score="8" data-topic="ai" data-type="research">
+<div class="row">
+<div class="img" style="background-image:url(covers/cb60248b23.webp)"></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#8b5cf6">研究</span>
+</div>
+<div class="tt">MemMA: 多智能体记忆协调与自进化框架</div>
+<div class="sm">论文提出 MemMA 框架，通过多智能体推理协调记忆周期并实现原地自进化</div>
+</div>
+</div>
+<div class="ins">💡 Agent 记忆管理从单体走向多智能体协作，是构建长期自主 Agent 的关键基础</div>
+<div class="sl">
+<a href="https://arxiv.org/abs/2603.18718" target="_blank" class="si"><span class="bg" style="--c:#ffd21e">HF</span><span class="sn">HuggingFace Papers</span><span class="st">MemMA: Coordinating the Memory Cycle through Multi-Agent Reasoning and In-Situ S</span></a>
+</div>
+</div>
+</div>
+<div class="ft">ai-news-monitor · 22:30</div>
+</div><script>
+function togglePanel(id){document.querySelectorAll('.overlay').forEach(function(o){if(o.id===id+'-overlay'){o.classList.toggle('show')}else{o.classList.remove('show')}})}
+function closePanel(el){el.closest('.overlay').classList.remove('show')}
+
+document.addEventListener('DOMContentLoaded',function(){
+  // Sort buttons
+  document.querySelectorAll('.sort-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var mode=this.dataset.mode;
+      document.querySelectorAll('.sort-btn').forEach(function(b){b.classList.remove('active')});
+      this.classList.add('active');
+      var container=document.querySelector('.cards');
+      var cards=Array.from(container.querySelectorAll('.card'));
+      if(mode==='time'){cards.sort(function(a,b){return(b.dataset.time||'').localeCompare(a.dataset.time||'')})}
+      else if(mode==='score'){cards.sort(function(a,b){return(parseInt(b.dataset.score)||0)-(parseInt(a.dataset.score)||0)})}
+      else if(mode==='category'){cards.sort(function(a,b){var order={'AI':'01','SaaS':'02','DevTools':'03','Infra':'04','SEO':'05','电商':'06'};var ta=a.querySelector('.tag')?a.querySelector('.tag').textContent:'';var tb=b.querySelector('.tag')?b.querySelector('.tag').textContent:'';var oa=order[ta]||'99'+ta;var ob=order[tb]||'99'+tb;if(oa!==ob)return oa.localeCompare(ob);return(b.dataset.time||'').localeCompare(a.dataset.time||'')})}
+      cards.forEach(function(c){container.appendChild(c)});
+    });
+  });
+
+  // Filter buttons - use event delegation on each filter-group
+  document.querySelectorAll('.filter-group').forEach(function(group){
+    group.addEventListener('click',function(e){
+      var btn=e.target.closest('.filter-btn');
+      if(!btn||!btn.dataset.fk)return;
+      group.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
+      btn.classList.add('active');
+      doFilter();
+    });
+  });
+});
+
+function doFilter(){
+  var filters={};
+  document.querySelectorAll('.filter-group').forEach(function(g){
+    var active=g.querySelector('.filter-btn.active');
+    if(active&&active.dataset.fk){filters[active.dataset.fk]=active.dataset.fv}
+  });
+  var tv=filters['topic']||'all';
+  var yv=filters['type']||'all';
+  document.querySelectorAll('.card').forEach(function(c){
+    var show=true;
+    if(tv!=='all'&&c.dataset.topic!==tv)show=false;
+    if(yv!=='all'&&c.dataset.type!==yv)show=false;
+    c.style.display=show?'':'none';
+  });
+}
+</script></body></html>
