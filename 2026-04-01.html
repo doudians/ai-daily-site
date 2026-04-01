@@ -68,13 +68,14 @@ h2 i{width:5px;height:5px;border-radius:50%;background:var(--c)}
 <div class="hdr"><h1>AI Daily</h1>
 <p>2026年04月01日 · 48h 动态</p>
 <div class="m">
-<span class="badge" onclick="togglePanel('topic')">🔥 121 主题</span>
+<span class="badge" onclick="togglePanel('topic')">🔥 122 主题</span>
 <span class="badge" onclick="togglePanel('source')">📊 0 信源</span>
 <span class="badge" onclick="togglePanel('channel')">📡 0 渠道</span>
 </div></div>
 
 <div id="topic-overlay" class="overlay" onclick="if(event.target===this)this.classList.remove('show')"><div id="topic-list" class="panel">
 <div class="panel-head">🔥 主题列表 <span class="panel-close" onclick="closePanel(this)">&times;</span></div>
+<div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Claude Code 源码泄露：隐藏宠物和挫败感检测</div>
 <div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> ChatGPT Gemini 争夺 AI 购物入口</div>
 <div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> Gemini 原生嵌入视频能力</div>
 <div class="pl-item"><span class="tag" style="--c:#7c3aed">AI</span> OpenAI Safety Bug Bounty 安全漏洞奖励</div>
@@ -223,7 +224,22 @@ h2 i{width:5px;height:5px;border-radius:50%;background:var(--c)}
 <button class="sort-btn active" data-mode="time">🕐 时间</button>
 <button class="sort-btn" data-mode="score">🔥 重要度</button>
 </div>
-<div class="cards"><div class="card " data-time="" data-score="0" data-topic="ai" data-type="market">
+<div class="cards"><div class="card " data-time="" data-score="0" data-topic="ai" data-type="analysis">
+<div class="row">
+<div class="img imgf" style="--c:#7c3aed"><span>🤖</span></div>
+<div class="cnt">
+<div class="tags">
+<span class="tag" style="--c:#7c3aed">AI</span><span class="tag" style="--c:#6366f1">分析</span>
+</div>
+<div class="tt">Claude Code 源码泄露：隐藏宠物和挫败感检测</div>
+<div class="sm"></div>
+</div>
+</div>
+<div class="ins">💡 Anthropic 源码意外泄露，暴露内部工具设计细节和用户体验考量</div>
+<div class="sl">
+</div>
+</div>
+<div class="card " data-time="" data-score="0" data-topic="ai" data-type="market">
 <div class="row">
 <div class="img imgf" style="--c:#7c3aed"><span>🤖</span></div>
 <div class="cnt">
@@ -2039,7 +2055,7 @@ h2 i{width:5px;height:5px;border-radius:50%;background:var(--c)}
 </div>
 </div>
 </div>
-<div class="ft">ai-news-monitor · 09:12</div>
+<div class="ft">ai-news-monitor · 09:35</div>
 </div><script>
 function togglePanel(id){document.querySelectorAll('.overlay').forEach(function(o){if(o.id===id+'-overlay'){o.classList.toggle('show')}else{o.classList.remove('show')}})}
 function closePanel(el){el.closest('.overlay').classList.remove('show')}
